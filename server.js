@@ -5,15 +5,23 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// ✅ CORS setup – allow frontend domain
+const allowedOrigins = ['https://portfolio-lu74-git-main-dhilleswara-aus-projects.vercel.app/'];
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
+
 app.use(express.json());
 
-// MongoDB connection
+// ✅ MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB error:', err));
 
-// Define schema
+// ✅ Define schema
 const ContactSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -24,7 +32,7 @@ const ContactSchema = new mongoose.Schema({
 
 const Contact = mongoose.model('Contact', ContactSchema);
 
-// POST route
+// ✅ POST route
 app.post('/api/contact', async (req, res) => {
   try {
     const newContact = new Contact(req.body);
@@ -36,5 +44,6 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
+// ✅ Server listen
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
