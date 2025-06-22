@@ -24,14 +24,18 @@ const Contact: React.FC = () => {
     setIsSubmitting(true);
   
     try {
-      const response = await fetch('http://localhost:5000/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-  
+      const BASE_URL = import.meta.env.PROD
+      ? 'https://portfolio-backend.onrender.com'
+      : 'http://localhost:5000';
+
+    const response = await fetch(`${BASE_URL}/api/contact`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+    
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
