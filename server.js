@@ -6,24 +6,13 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS setup – allow frontend domain
-const allowedOrigins = [
-  'https://dhilleswara-portfolio.vercel.app',
-  'https://portfolio-lu74-git-main-dhilleswara-aus-projects.vercel.app'
-];
-
+// ✅ CORS Setup (allow from your Vercel domain)
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST'],
-  credentials: true
+  origin: ['https://dhilleswara-portfolio.vercel.app'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+  credentials: true,
 }));
-
 
 app.use(express.json());
 
@@ -32,7 +21,7 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB error:', err));
 
-// ✅ Define schema
+// ✅ Schema and Model
 const ContactSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -40,10 +29,9 @@ const ContactSchema = new mongoose.Schema({
   message: String,
   timestamp: { type: Date, default: Date.now }
 });
-
 const Contact = mongoose.model('Contact', ContactSchema);
 
-// ✅ POST route
+// ✅ POST /api/contact
 app.post('/api/contact', async (req, res) => {
   try {
     const newContact = new Contact(req.body);
@@ -55,6 +43,6 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// ✅ Server listen
+// ✅ Server Start
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
