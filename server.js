@@ -7,14 +7,23 @@ dotenv.config();
 const app = express();
 
 // ✅ CORS setup – allow frontend domain
-const allowedOrigins = ['https://portfolio-lu74-git-main-dhilleswara-aus-projects.vercel.app',
-'https://dhilleswara-portfolio.vercel.app'
+const allowedOrigins = [
+  'https://dhilleswara-portfolio.vercel.app',
+  'https://portfolio-lu74-git-main-dhilleswara-aus-projects.vercel.app'
 ];
+
 app.use(cors({
-  origin: allowedOrigins,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST'],
   credentials: true
 }));
+
 
 app.use(express.json());
 
