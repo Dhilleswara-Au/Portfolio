@@ -8,11 +8,17 @@ const app = express();
 
 // ✅ CORS Setup (allow from your Vercel domain)
 app.use(cors({
-  origin: ['https://dhilleswara-portfolio.vercel.app'],
+  origin: function (origin, callback) {
+    if (!origin || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type'],
   credentials: true,
 }));
+
 
 app.use(express.json());
 
