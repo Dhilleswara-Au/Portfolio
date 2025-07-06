@@ -9,10 +9,11 @@ const app = express();
 // ✅ CORS Setup (allow from your Vercel domain)
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow localhost:5173 for local dev, and .vercel.app for production
+    // Allow localhost for dev, your Vercel domain for prod, and .vercel.app subdomains
     if (
       !origin ||
       origin === 'http://localhost:5173' ||
+      origin === 'https://dhilleswara-portfolio.vercel.app' ||
       origin.endsWith('.vercel.app')
     ) {
       callback(null, true);
