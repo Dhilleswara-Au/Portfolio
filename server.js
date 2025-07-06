@@ -9,7 +9,12 @@ const app = express();
 // ✅ CORS Setup (allow from your Vercel domain)
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || origin.endsWith('.vercel.app')) {
+    // Allow localhost:5173 for local dev, and .vercel.app for production
+    if (
+      !origin ||
+      origin === 'http://localhost:5173' ||
+      origin.endsWith('.vercel.app')
+    ) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
